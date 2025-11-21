@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenu.uss?fileID=7433441132597879392&amp;guid=73c260870e1da2a4db2bf7f3f173e7a0&amp;type=3#MainMenu" />
+    <ui:VisualElement name="Container" style="flex-grow: 1;">
+        <ui:Label text="Game Over&#10;" name="GameOverText" class="header" style="font-size: 140px;" />
+        <ui:Label text="Coins Collected:" name="CoinCount" style="align-items: center; justify-content: center; align-content: auto; align-self: center; -unity-font-definition: url(&quot;project://database/Assets/Fonts/Cloudy%20With%20a%20Chance%20of%20Love.ttf?fileID=12800000&amp;guid=5dce9a47d0294324e8390fc01beba34d&amp;type=3#Cloudy With a Chance of Love&quot;); font-size: 60px; color: rgb(0, 0, 0);" />
+        <ui:Button text="Return To Menu" name="ReturnToMenu" class="button" style="-unity-background-scale-mode: stretch-to-fill; width: 350px; height: 80px; font-size: 38px;" />
+    </ui:VisualElement>
+</ui:UXML>
