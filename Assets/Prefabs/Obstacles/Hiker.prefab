@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c684d53b8dd8f4d4d878852194312c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::movingObstacle
-  stunTimer: 0
+  stunTimer: 1
   speed: -3
   invincibilityTimer: 3
 --- !u!50 &7678977092011732396

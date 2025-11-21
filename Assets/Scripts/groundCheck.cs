@@ -3,10 +3,12 @@ using UnityEngine;
 public class groundCheck : MonoBehaviour
 {
     Rigidbody2D rb;
+    private playerController player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        player = GetComponentInParent<playerController>();
     }
 
     // Update is called once per frame
@@ -21,7 +23,7 @@ public class groundCheck : MonoBehaviour
         {
             Debug.Log("Grounded");
 
-            GetComponentInParent<playerController>().isGrounded = true;
+            player.isGrounded = true;
 
         }
     }
@@ -31,7 +33,7 @@ public class groundCheck : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             Debug.Log("Not Grounded");
-            GetComponentInParent<playerController>().isGrounded = false;
+            player.isGrounded = false;
         }
     }
 }

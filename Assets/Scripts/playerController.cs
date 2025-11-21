@@ -5,7 +5,9 @@ using UnityEngine;
 public class playerController : MonoBehaviour
 {
     public event System.Action GetCoin;
-    public event System.Action playerDeath;
+    public event System.Action PlayerDeath;
+    public event System.Action HasExtraLife;
+    public event System.Action <float> PlayerStun;
     [SerializeField] private float speed = 5.0f;    //Temporary, later the level will move towards the player
     [SerializeField] private float jumpForce = 7.0f;
     [SerializeField] private int extraLifes = 0;
@@ -14,6 +16,7 @@ public class playerController : MonoBehaviour
     [SerializeField] private int maxExtraJumps = 2;
     [SerializeField] private bool stunned = false;
 
+    private bool isKillable = true;
 
     public bool isGrounded;
     private bool jumpPressed;
@@ -104,6 +107,21 @@ public class playerController : MonoBehaviour
             }
             Destroy(collision.gameObject);
         }
+
+        if (collision.CompareTag("Death"))
+        {
+            if (extraLifes > 0)
+            {
+                StartCoroutine(HandleDeathInvincibility());
+                HasExtraLife?.Invoke();
+                extraLifes--;
+                Debug.Log("Extra Life used! Remaining Extra Lives: " + extraLifes);
+            }
+            else if (isKillable)
+            {
+                death();
+            }
+        }
     }
 
     private void gotExtraLife()
@@ -138,6 +156,7 @@ public class playerController : MonoBehaviour
     {
         Debug.Log("Player Stunned for " + stunTime + " seconds.");
         stunned = true;
+        PlayerStun?.Invoke(stunTime);
         StartCoroutine(StunDuration(stunTime));
     }
 
@@ -150,10 +169,16 @@ public class playerController : MonoBehaviour
 
     private void death()
     {
-
-            gameOverUI.SetActive(true);
-            Time.timeScale = 0f; // Pause the game
-            playerDeath?.Invoke();
+        Debug.Log("Player has died.");
+        Time.timeScale = 0f; // Pause the game
+        PlayerDeath?.Invoke();
 
     }   
+
+    private IEnumerator HandleDeathInvincibility()
+    {
+        isKillable = false;
+        yield return new WaitForSeconds(2f);
+        isKillable = true;
+    }
 }

@@ -15,7 +15,7 @@ public class obstacleBase : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Awake()
+    protected void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -39,6 +39,12 @@ public class obstacleBase : MonoBehaviour
                 Debug.Log("Player hit an obstacle!");
             }
         }
+
+        if (collision.gameObject.CompareTag("Cleaner"))
+        {
+            Destroy(this.gameObject);
+            Debug.Log("Obstacle destroyed by Cleaner.");
+        }
     }
 
     protected IEnumerator HandleInvincibiltyFrames()
@@ -47,8 +53,26 @@ public class obstacleBase : MonoBehaviour
         isPlayerInvincible = false;
     }
 
-    protected virtual void onPlayerHit(playerController player)
+    protected void onPlayerHit(playerController player)
     {
-        // To be overridden in derived classes
+        if (!player.shielded)
+        {
+            player.stun(stunTimer);
+            StartCoroutine(accountForSpeedChange());
+            Debug.Log("Player stunned by stationary obstacle!");
+        }
+
+        else
+        {
+            Debug.Log("Player shielded, no stun applied from stationary obstacle.");
+            player.shielded = false; //Shield is consumed
+        }
+    }
+
+    private IEnumerator accountForSpeedChange()
+    {
+        speed = speed + 2; //Will need to adjust with scroll speed later 
+        yield return new WaitForSeconds(stunTimer);
+        speed = speed - 2;  //Will need to adjust with scroll speed later
     }
 }

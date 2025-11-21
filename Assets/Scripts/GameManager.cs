@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public event System.Action gameOver;
+    private playerController player;
     public static GameManager Instance { get; private set; }    //For singleton pattern
     public int coinsCollected; //Number of coins collected to be saved and loaded into this later
     void Awake()
@@ -24,29 +25,40 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Time.timeScale = 1f; //Reset time scale in case it was changed in previous scene (like in pause menu)
         if (scene.name == "GameScene")
         {
             // Initialize game state for the game scene
             Debug.Log("Game Scene Loaded");
-            var player = FindFirstObjectByType<playerController>();
-            player.GetCoin += () =>
-            {
-                coinsCollected++;   //Will need to save these in a save manager later
-                Debug.Log("Total Coins Collected: " + coinsCollected);
-            };
+            player = FindFirstObjectByType<playerController>();
 
-            player.playerDeath += () =>
-            {
-                death();
-            };
+
+            player.GetCoin -= OnGetCoin;    //Unsubscribes first just in case of multiple subscriptions 
+            player.PlayerDeath -= OnPlayerDeath;
+
+
+            player.GetCoin += OnGetCoin;
+            player.PlayerDeath += OnPlayerDeath;
+
+
+
 
         }
     }
 
-    void death()
+    private void OnGetCoin()
     {
+        coinsCollected++;
+        Debug.Log("Total Coins Collected: " + coinsCollected);
+    }
+
+    private void OnPlayerDeath()
+    {
+        Debug.Log("Game Over Triggered in GameManager");
         gameOver?.Invoke();
     }
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
